@@ -6,13 +6,11 @@ from msrest.authentication import BasicAuthentication
 from azdevman.utils.context import pass_context
 
 @click.group('get')
-@click.help_option('-h', '--help')
 @click.pass_obj
 def get(ctx):
     """Get Azure DevOps resources"""
 
 @get.command('projects')
-@click.help_option('-h', '--help')
 @click.pass_obj
 def get_projects(ctx):
     """Get all projects within an Azure DevOps organization"""
@@ -24,7 +22,6 @@ def get_projects(ctx):
         print("{!s:<38} {!s:<38} {!s:<.120}".format(project.id, project.name, project.description))
 
 @get.command('build')
-@click.help_option('-h', '--help')
 @click.option('-b', '--build-id', 'build_id', type=int, default=None, required=True,
             help='Build id used to search for build')
 # @click.option('-f', '--filters', 'filters', default=None,
@@ -43,7 +40,6 @@ def get_build(ctx, project, build_id):
                                 param=build_id, param_hint='--build-id')
 
 # @get.command('builds')
-# @click.help_option('-h', '--help')
 # @click.option('-d', '--definition-id', 'definition',
 #                 help='Retrieve builds by definition id')
 # @click.option('-p', '--project', 'project', required=True,
@@ -60,7 +56,6 @@ def get_build(ctx, project, build_id):
 #         print(build)
 
 @get.command('build-definition')
-@click.help_option('-h', '--help')
 @click.option('-d', '--definition-id', 'definition_id',
                 help='Definition id used to search build definitions')
 @click.option('-p', '--project', 'project', required=True,
@@ -77,7 +72,6 @@ def get_build_definition(ctx, definition_id, project):
                                 param=definition_id, param_hint='--definition-id')
 
 # @get.command('build-definitions')
-# @click.help_option('-h', '--help')
 # @click.option('-p', '--project', 'project', required=True,
 #                 help='Project name or id to scope the search')
 # @click.pass_obj
