@@ -16,12 +16,12 @@ def get(ctx):
 @click.pass_obj
 def get_projects(ctx):
     """Get all projects within an Azure DevOps organization"""
-    rv = {'Projects': {}}
     _core_client = ctx.connection.get_client('vsts.core.v4_1.core_client.CoreClient')
     projects = _core_client.get_projects()
+    print('{:<38} {:<38} {:<60}'.format('Project ID:', 'Project Name:', 'Description'))
+    print('-' * 150)
     for project in projects:
-        rv['Projects'] = project.name
-        print(project.id + " : " + project.name)
+        print("{!s:<38} {!s:<38} {!s:<.120}".format(project.id, project.name, project.description))
 
 @get.command('build')
 @click.help_option('-h', '--help')
