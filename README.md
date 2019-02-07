@@ -1,2 +1,3 @@
-# azdevman
-Azure DevOps is a CLI tool that assists in managing resources within an Azure DevOps organization.
+# Azure DevOps Manager
+
+Azdevman is a CLI tool that assists in managing resources within an Azure DevOps organization.
