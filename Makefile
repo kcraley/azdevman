@@ -6,6 +6,9 @@
 
 # Set additional variables
 DIR?=$(shell pwd)
+VENV_NAME?=venv
+VENV_ACTIVATE=source ./$(VENV_NAME)/bin/activate
+PYTHON=${VENV_NAME}/bin/python3
 
 #--------------------------------------------------------
 # - Default rule
@@ -17,26 +20,14 @@ default:
 # - Setup Python3 venv
 #--------------------------------------------------------
 .PHONY: setup
-setup: venv install_requirements
+setup: venv
 
-.PHONY: venv
-venv: env/bin/activate
-	python3 -m venv env
+venv: $(VENV_NAME)/bin/activate
+$(VENV_NAME)/bin/activate: setup.py
+	test -d $(VENV_NAME) || virtualenv -p python3 $(VENV_NAME)
+	$(VENV_ACTIVATE)
+	${PYTHON} -m pip install -U pip
+	${PYTHON} -m pip install -e .
 
-env/bin/activate:
-	source $(PWD)/env/bin/activate
-
-.PHONY: install_requirements
-install_requirements:
-	pip install -r requirements.txt
-
-.PHONY: deactivate
-deactivate:
-	deactivate
-
-#--------------------------------------------------------
-# - Install azdevman
-#--------------------------------------------------------
-.PHONY: install
-install:
-	pip install -e .
+run: venv
+	azdevman

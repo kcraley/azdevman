@@ -9,6 +9,7 @@ class Context(object):
     def __init__(self):
         self._azure_devops_organization = ''
         self._personal_access_token = ''
+        self._project = ''
         self._config_dir = '.azdevman'
         self._config_file = 'config.json'
         self._config_path = os.path.join(os.getenv('HOME'), self._config_dir, self._config_file)
@@ -21,6 +22,7 @@ class Context(object):
                 contents = json.load(file)
                 self._azure_devops_organization = contents['Azure DevOps Organization']
                 self._personal_access_token = contents['Personal Access Token']
+                self._project = contents['Project']
 
         else:
             self._init_config()
