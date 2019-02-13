@@ -107,7 +107,7 @@ def get_build_definition(ctx, definition_id, project, show_tasks):
             rv['Tasks'] = build_definition.process['phases'][0]['steps']
         else:
             rv['Tasks'] = ['...']
-        print(json.dumps(rv, indent=2))
+        click.echo(json.dumps(rv, indent=2))
     except vsts.exceptions.VstsServiceError:
         raise click.BadParameter('a build definition does not exist with id: ' + str(definition_id), ctx=ctx,
                                 param=definition_id, param_hint='--definition-id')
@@ -127,20 +127,28 @@ def get_build_definition(ctx, definition_id, project, show_tasks):
 #         return
 
 @get.command('release')
-@click.option('-r', '--release-id', 'release_id', type=int,
-            help='Get a single release instance of a list of release')
+@click.option('-r', '--release-id', 'release_id',
+              type=int, required=False,
+              help='Get a single release instance of a list of release')
 @click.option('-p', '--project', 'project',
-            help='Project name or id to scope the search')
+              help='Project name or id to scope the search')
 @click.pass_context
 def get_release(ctx, project, release_id):
     """Get a single release instance or a list of release instances within a project"""
-    pass
+    _release_client = ctx.obj.connection.get_client('vsts.release.v4_1.release_client.ReleaseClient')
+    try:
+        release = _release_client.get_release(project, release_id)
+        pprint(release.__dict__)
+    except vsts.exceptions.VstsServiceError:
+        raise click.BadParameter('a release definition does not exist with id: ' + str(release_id), ctx=ctx,
+                                param=release_id, param_hint='--release-id')
 
 @get.command('release-definition')
-@click.option('-d', '--definition-id', 'definition_id', type=int,
-            help='Get a single release instance of a list of release')
+@click.option('-d', '--definition-id', 'definition_id',
+              type=int,
+              help='Get a single release instance of a list of release')
 @click.option('-p', '--project', 'project',
-            help='Project name or id to scope the search')
+              help='Project name or id to scope the search')
 @click.pass_context
 def get_release_def(ctx, project, definition_id):
     """Get a single release definition or a list of release definitions within a project"""
