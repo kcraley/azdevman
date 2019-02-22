@@ -11,6 +11,7 @@ from azdevman.utils.context import pass_context
 def get(ctx):
     """Get Azure DevOps resources"""
 
+
 @get.command('projects')
 @click.pass_obj
 def get_projects(ctx):
@@ -22,12 +23,11 @@ def get_projects(ctx):
     for project in projects:
         print("{!s:<38} {!s:<38} {!s:<.120}".format(project.id, project.name, project.description))
 
+
 @get.command('build')
 @click.option('-b', '--build-id', 'build_id',
               type=int, default=None, required=True,
               help='Build id used to search for build')
-# @click.option('-f', '--filters', 'filters', default=None,
-#             help='Properties to be returned')
 @click.option('-p', '--project', 'project',
               required=True,
               help='Project name or id to scope the search')
@@ -36,27 +36,14 @@ def get_build(ctx, project, build_id):
     """Get a single build instance or list of build instances within a project"""
     _build_client = ctx.obj.connection.get_client('vsts.build.v4_1.build_client.BuildClient')
     try:
+        from azdevman.utils._format import transform_build_table_output
         build = _build_client.get_build(build_id, project)
-        # pprint(build.__dict__)
-        rv = {}
-        rv['BuildNumber'] = build.build_number
-        rv['DefinitionName'] = build.definition.name
-        rv['RequestedFor'] = build.requested_for.display_name
-        rv['Result'] = build.result
-        rv['Status'] = build.status
-        rv['AgentPool'] = {'ID': build.queue.pool.id, 'Name': build.queue.pool.name}
-        rv['Repository'] = {'Name': build.repository.name,
-                            'ID': build.repository.id,
-                            'Type': build.repository.type,
-                            'URL': build.repository.url}
-        rv['Queue'] = {'QueueTime': build.queue_time.strftime('%a, %d %B %Y - %H:%M:%S %Z'),
-                       'StartTime': build.start_time.strftime('%a, %d %B %Y - %H:%M:%S %Z'),
-                       'FinishTime': build.finish_time.strftime('%a, %d %B %Y - %H:%M:%S %Z'),
-                       'Duration': str(build.finish_time - build.start_time)}
-        print(json.dumps(rv, indent=2))
+        output = transform_build_table_output(build)
+        print(json.dumps(output, indent=2))
     except vsts.exceptions.VstsServiceError:
         raise click.BadParameter('a build does not exist with id: ' + str(build_id), ctx=ctx,
-                                param=build_id, param_hint='--build-id')
+                                 param=build_id, param_hint='--build-id')
+
 
 # @get.command('builds')
 # @click.option('-d', '--definition-id', 'definition',
@@ -74,6 +61,7 @@ def get_build(ctx, project, build_id):
 #     for build in builds:
 #         print(build)
 
+
 @get.command('build-definition')
 @click.option('-d', '--definition-id', 'definition_id',
               help='Definition id used to search build definitions')
@@ -88,29 +76,32 @@ def get_build_definition(ctx, definition_id, project, show_tasks):
     """Get a single build definition or a list of build definitions within a project"""
     _build_client = ctx.obj.connection.get_client('vsts.build.v4_1.build_client.BuildClient')
     try:
+        from azdevman.utils._format import transform_definition_table_output
         build_definition = _build_client.get_definition(definition_id, project)
-        # pprint(build_definition.retention_rules[0].__dict__)
-        rv = {}
-        rv['ID'] = build_definition.id
-        rv['Name'] = build_definition.name
-        rv['AuthoredBy'] = build_definition.authored_by.display_name
-        rv['CreatedDate'] = build_definition.created_date.strftime('%a, %d %B %Y - %H:%M:%S %Z')
-        rv['Repository'] = {'Name': build_definition.repository.name,
-                            'ID': build_definition.repository.id,
-                            'Type': build_definition.repository.type,
-                            'URL': build_definition.repository.url}
-        rv['Pool'] = {'ID': build_definition.queue.pool.id,
-                       'Name': build_definition.queue.pool.name}
-        rv['RetentionPolicy'] = {'DaysToKeep': build_definition.retention_rules[0].days_to_keep,
-                                 'MinimumToKeep': build_definition.retention_rules[0].minimum_to_keep}
-        if show_tasks:
-            rv['Tasks'] = build_definition.process['phases'][0]['steps']
-        else:
-            rv['Tasks'] = ['...']
-        click.echo(json.dumps(rv, indent=2))
+        pprint(build_definition.__dict__)
+        output = transform_definition_table_output(build_definition)
+        # rv = {}
+        # rv['ID'] = build_definition.id
+        # rv['Name'] = build_definition.name
+        # rv['AuthoredBy'] = build_definition.authored_by.display_name
+        # rv['CreatedDate'] = build_definition.created_date.strftime('%a, %d %B %Y - %H:%M:%S %Z')
+        # rv['Repository'] = {'Name': build_definition.repository.name,
+        #                     'ID': build_definition.repository.id,
+        #                     'Type': build_definition.repository.type,
+        #                     'URL': build_definition.repository.url}
+        # rv['Pool'] = {'ID': build_definition.queue.pool.id,
+        #               'Name': build_definition.queue.pool.name}
+        # rv['RetentionPolicy'] = {'DaysToKeep': build_definition.retention_rules[0].days_to_keep,
+        #                          'MinimumToKeep': build_definition.retention_rules[0].minimum_to_keep}
+        # if show_tasks:
+        #     rv['Tasks'] = build_definition.process['phases'][0]['steps']
+        # else:
+        #     rv['Tasks'] = ['...']
+        click.echo(json.dumps(output, indent=2))
     except vsts.exceptions.VstsServiceError:
         raise click.BadParameter('a build definition does not exist with id: ' + str(definition_id), ctx=ctx,
-                                param=definition_id, param_hint='--definition-id')
+                                 param=definition_id, param_hint='--definition-id')
+
 
 # @get.command('build-definitions')
 # @click.option('-p', '--project', 'project', required=True,
@@ -126,6 +117,7 @@ def get_build_definition(ctx, definition_id, project, show_tasks):
 #     except:
 #         return
 
+
 @get.command('release')
 @click.option('-r', '--release-id', 'release_id',
               type=int, required=False,
@@ -140,8 +132,9 @@ def get_release(ctx, project, release_id):
         release = _release_client.get_release(project, release_id)
         pprint(release.__dict__)
     except vsts.exceptions.VstsServiceError:
-        raise click.BadParameter('a release definition does not exist with id: ' + str(release_id), ctx=ctx,
-                                param=release_id, param_hint='--release-id')
+        raise click.BadParameter('a release definition does not exist with id: ' + str(release_id),
+                                 ctx=ctx, param=release_id, param_hint='--release-id')
+
 
 @get.command('release-definition')
 @click.option('-d', '--definition-id', 'definition_id',
