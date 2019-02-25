@@ -26,12 +26,16 @@ class AzDevMan(click.MultiCommand):
         return commands
 
     def get_command(self, ctx, name):
-        ns = {}
-        fn = os.path.join(command_plugins, name + '.py')
-        with open(fn) as file:
-            code = compile(file.read(), fn, 'exec')
-            eval(code, ns, ns)
-        return ns[name]
+        try:
+            ns = {}
+            fn = os.path.join(command_plugins, name + '.py')
+            with open(fn) as file:
+                code = compile(file.read(), fn, 'exec')
+                eval(code, ns, ns)
+            return ns[name]
+        except FileNotFoundError:
+            raise click.UsageError('`' + name + '`' + ' command does not exist.  Run `azdevman -h` for help',
+                                  ctx=ctx)
 
 # MAIN CLI GROUP
 @click.command(cls=AzDevMan, context_settings=CONTEXT_SETTINGS)
