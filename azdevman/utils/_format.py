@@ -102,20 +102,29 @@ def _transform_definition_row(row, include_draft_column=False):
     table_row['Repository']['Type'] = row.repository.type
     table_row['Repository']['URL'] = row.repository.url
 
+
+    table_row['Pool'] = {}
+    table_row['Pool']['ID'] = row.queue.pool.id
+    table_row['Pool']['Name'] = row.queue.pool.name
+
     table_row['Retention Policy'] = []
     for item in range(len(row.retention_rules)):
         table_row['Retention Policy'].append({'Days to Keep': row.retention_rules[item].days_to_keep,
                                               'Minium to Keep': row.retention_rules[item].minimum_to_keep})
+
+    table_row['Triggers'] = []
+    for item in range(len(row.triggers)):
+        table_row['Triggers'].append(row.triggers[item])
 
     if include_draft_column:
         if row.quality == 'draft':
             table_row['Draft'] = True
         else:
             table_row['Draft'] = ' '
-    # if row.status:
-    #     table_row['Status'] = row.status
-    # else:
-    #     table_row['Status'] = ' '
+    if row.queue_status:
+        table_row['Queue Status'] = row.queue_status
+    else:
+        table_row['Queue Status'] = ' '
     if row.queue:
         table_row['Default Queue'] = row.queue.name
     else:
