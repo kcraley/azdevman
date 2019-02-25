@@ -11,9 +11,12 @@ def config(ctx):
 @click.pass_obj
 def get_config(ctx):
     """Get the current configuration"""
-    with open(ctx._config_path, 'r') as file:
-        contents = json.load(file)
-        print(json.dumps(contents, indent=4))
+    try:
+        with open(ctx._config_path, 'r') as file:
+            contents = json.load(file)
+            print(json.dumps(contents, indent=4))
+    except json.decoder.JSONDecodeError:
+        raise click.ClickException('No configuration exists.  Please run `azdevman config set`.')
 
 @config.command('set')
 @click.pass_obj
