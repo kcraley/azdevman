@@ -39,7 +39,7 @@ def get_build(ctx, project, build_id):
         from azdevman.utils._format import transform_build_table_output
         build = _build_client.get_build(build_id, project)
         output = transform_build_table_output(build)
-        print(json.dumps(output, indent=2))
+        click.echo(json.dumps(output, indent=2))
     except vsts.exceptions.VstsServiceError:
         raise click.BadParameter('a build does not exist with id: ' + str(build_id), ctx=ctx,
                                  param=build_id, param_hint='--build-id')
@@ -78,25 +78,8 @@ def get_build_definition(ctx, definition_id, project, show_tasks):
     try:
         from azdevman.utils._format import transform_definition_table_output
         build_definition = _build_client.get_definition(definition_id, project)
-        pprint(build_definition.__dict__)
+        # pprint(build_definition.__dict__)
         output = transform_definition_table_output(build_definition)
-        # rv = {}
-        # rv['ID'] = build_definition.id
-        # rv['Name'] = build_definition.name
-        # rv['AuthoredBy'] = build_definition.authored_by.display_name
-        # rv['CreatedDate'] = build_definition.created_date.strftime('%a, %d %B %Y - %H:%M:%S %Z')
-        # rv['Repository'] = {'Name': build_definition.repository.name,
-        #                     'ID': build_definition.repository.id,
-        #                     'Type': build_definition.repository.type,
-        #                     'URL': build_definition.repository.url}
-        # rv['Pool'] = {'ID': build_definition.queue.pool.id,
-        #               'Name': build_definition.queue.pool.name}
-        # rv['RetentionPolicy'] = {'DaysToKeep': build_definition.retention_rules[0].days_to_keep,
-        #                          'MinimumToKeep': build_definition.retention_rules[0].minimum_to_keep}
-        # if show_tasks:
-        #     rv['Tasks'] = build_definition.process['phases'][0]['steps']
-        # else:
-        #     rv['Tasks'] = ['...']
         click.echo(json.dumps(output, indent=2))
     except vsts.exceptions.VstsServiceError:
         raise click.BadParameter('a build definition does not exist with id: ' + str(definition_id), ctx=ctx,
