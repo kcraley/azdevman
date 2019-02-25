@@ -23,14 +23,11 @@ class Context(object):
                 self._azure_devops_organization = contents['Azure DevOps Organization']
                 self._personal_access_token = contents['Personal Access Token']
                 self._project = contents['Project']
-
         else:
             self._init_config()
 
     def _init_config(self):
-        if os.path.exists(os.path.dirname(self._config_path)):
-            pass
-        else:
+        if not os.path.exists(os.path.dirname(self._config_path)):
             os.mkdir(os.path.dirname(self._config_path))
         with open(self._config_path, 'w') as contents:
             contents.write('')
