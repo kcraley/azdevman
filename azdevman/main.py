@@ -12,8 +12,8 @@ __version__ = "0.0.1"
 CONTEXT_SETTINGS = dict(auto_envvar_prefix='AZDEVMAN_',
                         help_option_names=['-h', '--help'],
                         terminal_width=125)
-
 command_plugins = os.path.join(os.path.dirname(__file__), 'commands')
+
 
 class AzDevMan(click.MultiCommand):
 
@@ -35,7 +35,8 @@ class AzDevMan(click.MultiCommand):
             return ns[name]
         except FileNotFoundError:
             raise click.UsageError('`' + name + '`' + ' command does not exist.  Run `azdevman -h` for help',
-                                  ctx=ctx)
+                                   ctx=ctx)
+
 
 # MAIN CLI GROUP
 @click.command(cls=AzDevMan, context_settings=CONTEXT_SETTINGS)
