@@ -1,6 +1,7 @@
 from collections import OrderedDict
 import datetime
 
+
 def transform_builds_table_output(result):
     table_output = []
     for item in result:
@@ -101,7 +102,6 @@ def _transform_definition_row(row, include_draft_column=False):
     table_row['Repository']['ID'] = row.repository.id
     table_row['Repository']['Type'] = row.repository.type
     table_row['Repository']['URL'] = row.repository.url
-
 
     table_row['Pool'] = {}
     table_row['Pool']['ID'] = row.queue.pool.id
