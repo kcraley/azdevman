@@ -4,6 +4,7 @@ import click
 from vsts.vss_connection import VssConnection
 from msrest.authentication import BasicAuthentication
 
+
 class Context(object):
 
     def __init__(self):
@@ -38,5 +39,6 @@ class Context(object):
         _connection_string = 'https://dev.azure.com/' + self._azure_devops_organization
         _connection = VssConnection(base_url=_connection_string, creds=_credentials)
         return _connection
+
 
 pass_context = click.make_pass_decorator(Context, ensure=True)
