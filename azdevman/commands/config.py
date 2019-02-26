@@ -2,10 +2,12 @@ import click
 import json
 from azdevman.utils.context import pass_context
 
+
 @click.group('config')
 @click.pass_obj
 def config(ctx):
     """Configure azdevman local options"""
+
 
 @config.command('get')
 @click.pass_obj
@@ -17,6 +19,7 @@ def get_config(ctx):
             print(json.dumps(contents, indent=4))
     except json.decoder.JSONDecodeError:
         raise click.ClickException('No configuration exists.  Please run `azdevman config set`.')
+
 
 @config.command('set')
 @click.pass_obj
