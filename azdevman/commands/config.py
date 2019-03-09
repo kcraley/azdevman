@@ -42,7 +42,7 @@ def set_context(ctx, profile):
     else:
         profile = "default"
     _config_contents['Profiles'][profile]['Azure DevOps Organization'] = click.prompt('Azure DevOps Organization')
-    _config_contents['Profiles'][profile]['Personal Access Token'] = click.prompt('Personal Access Token')
+    _config_contents['Profiles'][profile]['Personal Access Token'] = ctx._base64_encoder(click.prompt('Personal Access Token'))
     _config_contents['Profiles'][profile]['Project'] = click.prompt('Project')
     with open(ctx._config_path, 'w') as file:
         json.dump(_config_contents, file, sort_keys=True, indent=2)

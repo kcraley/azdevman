@@ -73,13 +73,14 @@ class Context(object):
 
     def _base64_encoder(self, string_to_encode):
         _encoded_string = base64.urlsafe_b64encode(string_to_encode.encode())
-        return str(_encoded_string)
+        return _encoded_string.decode()
 
-    def _base64_decoders(self, string_to_decode):
-        return base64.urlsafe_b64decode(string_to_decode.decode())
+    def _base64_decoder(self, string_to_decode):
+        _decoded_string = base64.urlsafe_b64decode(string_to_decode.encode())
+        return _decoded_string.decode()
 
     def _create_connection(self):
-        _credentials = BasicAuthentication('', self._azure_devops_pat)
+        _credentials = BasicAuthentication('', self._base64_decoder(self._azure_devops_pat))
         _connection_string = self._azure_base_url + self._azure_devops_organization
         _connection = VssConnection(base_url=_connection_string, creds=_credentials)
         return _connection

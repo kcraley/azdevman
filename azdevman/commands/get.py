@@ -40,9 +40,10 @@ def get_build(ctx, project, build_id):
         build = _build_client.get_build(build_id, project)
         output = transform_build_table_output(build)
         click.echo(json.dumps(output, indent=2))
-    except vsts.exceptions.VstsServiceError:
-        raise click.BadParameter('a build does not exist with id: ' + str(build_id), ctx=ctx,
-                                 param=build_id, param_hint='--build-id')
+    except vsts.exceptions.VstsServiceError as err:
+        print(err)
+        # raise click.BadParameter('a build does not exist with id: ' + str(build_id), ctx=ctx,
+        #                          param=build_id, param_hint='--build-id')
 
 
 # @get.command('builds')
