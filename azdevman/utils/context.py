@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import click
@@ -30,6 +31,7 @@ class Context(object):
         self._config_dir = CONFIG_DIR
         self._config_file = CONFIG_FILE_NAME
         self._config_path = os.path.join(os.path.expanduser("~"), self._config_dir, self._config_file)
+        self._init_config()
         self._set_current_context()
         self.config = self._get_config()
         self.connection = self._create_connection()

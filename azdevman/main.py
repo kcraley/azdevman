@@ -49,4 +49,3 @@ def cli(ctx):
 
     Azdevman is a CLI tool that assists in managing resources within an Azure DevOps organization."""
     ctx.obj = context.Context()
-    ctx.obj._init_config()
