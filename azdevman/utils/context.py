@@ -71,6 +71,13 @@ class Context(object):
         self._azure_devops_pat = _current_context_obj["Personal Access Token"]
         self._azure_devops_project = _current_context_obj["Project"]
 
+    def _base64_encoder(self, string_to_encode):
+        _encoded_string = base64.urlsafe_b64encode(string_to_encode.encode())
+        return str(_encoded_string)
+
+    def _base64_decoders(self, string_to_decode):
+        return base64.urlsafe_b64decode(string_to_decode.decode())
+
     def _create_connection(self):
         _credentials = BasicAuthentication('', self._azure_devops_pat)
         _connection_string = self._azure_base_url + self._azure_devops_organization
