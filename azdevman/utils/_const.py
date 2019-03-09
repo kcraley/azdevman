@@ -16,8 +16,9 @@ AZ_DEFAULT_PROJECT = 'PROJECT'
 # Config file
 CONFIG_DIR = ".azdevman"
 CONFIG_FILE_NAME = "config.json"
+CONFIG_FILE_DEFAULT_PROFILE = "default"
 CONFIG_FILE_DEFAULT_CONTENT = {
-    "CurrentContext": "default",
+    "CurrentContext": CONFIG_FILE_DEFAULT_PROFILE,
     "Profiles": {
         "default": {
             "Azure DevOps Organization": AZ_DEFAULT_ORG,
@@ -26,4 +27,3 @@ CONFIG_FILE_DEFAULT_CONTENT = {
         }
     }
 }
-CONFIG_FILE_DEFAULT_PROFILE = "default"
