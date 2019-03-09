@@ -20,7 +20,7 @@ def get_current_context(ctx):
 @config.command('get-context')
 @click.pass_obj
 def get_contexts(ctx):
-    """Get the current configuration"""
+    """Get the current context configuration"""
     try:
         with open(ctx._config_path, 'r') as file:
             _config_contents = json.load(file)
@@ -29,12 +29,12 @@ def get_contexts(ctx):
         raise click.ClickException('No configuration exists.  Please run `azdevman config set-context`.')
 
 
-@config.command('set-context')
+@config.command('create-context')
 @click.option('--profile', 'profile',
               help='Profile to use within the configuration')
 @click.pass_obj
-def set_context(ctx, profile):
-    """Set a property within the configuration"""
+def create_context(ctx, profile):
+    """Create a new context or update the default within the configuration"""
     with open(ctx._config_path, 'r') as file:
         _config_contents = json.load(file)
     if profile:
@@ -46,6 +46,22 @@ def set_context(ctx, profile):
     _config_contents['Profiles'][profile]['Project'] = click.prompt('Project')
     with open(ctx._config_path, 'w') as file:
         json.dump(_config_contents, file, sort_keys=True, indent=2)
+
+
+@config.command('set-context')
+@click.argument('context', nargs=1, required=True)
+@click.pass_context
+def set_context(ctx, context):
+    """Change the current context to a new one"""
+    try:
+        with open(ctx.obj._config_path, 'r') as file:
+            _config_contents = json.load(file)
+        _config_contents["CurrentContext"] = context
+        with open(ctx.obj._config_path, 'w') as file:
+            json.dump(_config_contents, file, sort_keys=True, indent=2)
+            click.echo('Set the current context to: ' + context)
+    except KeyError as err:
+        raise click.BadArgumentUsage('The context does not exist' + err, ctx=ctx)
 
 
 @config.command('delete-context')
