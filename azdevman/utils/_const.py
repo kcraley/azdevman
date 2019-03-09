@@ -10,14 +10,13 @@ AZDEVMAN_ENV_PREFIX = 'AZDEVMAN_'
 # Config file
 CONFIG_DIR = ".azdevman"
 CONFIG_FILE_NAME = "config.json"
-CONFIG_FILE_DEFAULT = {
+CONFIG_FILE_DEFAULT_CONTENT = {
     "CurrentContext": "default",
-    "Profiles": [
-        {
-            "Name": "default"
-        }
-    ]
+    "Profiles": {
+        "default": {}
+    }
 }
+CONFIG_FILE_DEFAULT_PROFILE = "default"
 
 # Azure Devops
 AZ_BASE_URL = 'https://dev.azure.com/'
