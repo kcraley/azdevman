@@ -12,7 +12,7 @@ from azdevman.utils._const import (
     CONFIG_FILE_DEFAULT_CONTENT,
     CONFIG_FILE_DEFAULT_PROFILE
 )
-from vsts.vss_connection import VssConnection
+from azure.devops.connection import Connection
 from msrest.authentication import BasicAuthentication
 
 
@@ -82,7 +82,7 @@ class Context(object):
     def _create_connection(self):
         _credentials = BasicAuthentication('', self._base64_decoder(self._azure_devops_pat))
         _connection_string = self._azure_base_url + self._azure_devops_organization
-        _connection = VssConnection(base_url=_connection_string, creds=_credentials)
+        _connection = Connection(base_url=_connection_string, creds=_credentials)
         return _connection
 
 

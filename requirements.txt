@@ -1,8 +1,11 @@
 astroid==2.1.0
--e git+https://github.com/kcraley/azdevman.git@d7dadc5d9255dcd2468900dd43159cfb82e3d2cb#egg=azdevman
+-e git+https://github.com/kcraley/azdevman.git@9fcb034719cbf9ff9e8c3476ee47a51dbcdd34a2#egg=azdevman
+azure-devops==5.0.0b2
 certifi==2018.11.29
 chardet==3.0.4
 Click==7.0
+entrypoints==0.3
+flake8==3.7.7
 idna==2.8
 isodate==0.6.0
 isort==4.3.4
@@ -11,11 +14,12 @@ mccabe==0.6.1
 msrest==0.6.4
 oauthlib==3.0.1
 pkg-resources==0.0.0
+pycodestyle==2.5.0
+pyflakes==2.1.0
 pylint==2.2.2
 requests==2.21.0
 requests-oauthlib==1.2.0
 six==1.12.0
 typed-ast==1.3.1
 urllib3==1.24.1
-vsts==0.1.25
 wrapt==1.11.1
