@@ -6,6 +6,7 @@ import vsts.exceptions
 from msrest.authentication import BasicAuthentication
 from azdevman.utils.context import pass_context
 
+
 @click.group('get')
 @click.pass_obj
 def get(ctx):
@@ -25,25 +26,23 @@ def get_projects(ctx):
 
 
 @get.command('build')
-@click.option('-b', '--build-id', 'build_id',
-              type=int, default=None, required=True,
-              help='Build id used to search for build')
 @click.option('-p', '--project', 'project',
-              required=True,
               help='Project name or id to scope the search')
+@click.argument('build_ids', nargs=-1, type=int, default=None, required=True)
 @click.pass_context
-def get_build(ctx, project, build_id):
+def get_build(ctx, project, build_ids):
     """Get a single build instance or list of build instances within a project"""
     _build_client = ctx.obj.connection.get_client('vsts.build.v4_1.build_client.BuildClient')
     try:
         from azdevman.utils._format import transform_build_table_output
-        build = _build_client.get_build(build_id, project)
-        output = transform_build_table_output(build)
-        click.echo(json.dumps(output, indent=2))
+        if not project:
+            project = ctx.obj._azure_devops_project
+        for build_id in build_ids:
+            build = _build_client.get_build(build_id, project)
+            output = transform_build_table_output(build)
+            click.echo(json.dumps(output, indent=2))
     except vsts.exceptions.VstsServiceError as err:
-        print(err)
-        # raise click.BadParameter('a build does not exist with id: ' + str(build_id), ctx=ctx,
-        #                          param=build_id, param_hint='--build-id')
+        raise click.BadArgumentUsage(err, ctx=ctx)
 
 
 # @get.command('builds')
@@ -64,27 +63,26 @@ def get_build(ctx, project, build_id):
 
 
 @get.command('build-definition')
-@click.option('-d', '--definition-id', 'definition_id',
-              help='Definition id used to search build definitions')
 @click.option('-p', '--project', 'project',
-              required=True,
               help='Project name or id to scope the search')
-@click.option('-s', '--show-tasks', 'show_tasks',
-              required=False, is_flag=True,
+@click.option('-s', '--show-tasks', 'show_tasks', required=False, is_flag=True,
               help='Show build definition tasks as part of the output')
+@click.argument('definition_ids', nargs=-1, type=int, default=None, required=True)
 @click.pass_context
-def get_build_definition(ctx, definition_id, project, show_tasks):
+def get_build_definition(ctx, definition_ids, project, show_tasks):
     """Get a single build definition or a list of build definitions within a project"""
     _build_client = ctx.obj.connection.get_client('vsts.build.v4_1.build_client.BuildClient')
     try:
         from azdevman.utils._format import transform_definition_table_output
-        build_definition = _build_client.get_definition(definition_id, project)
-        # pprint(build_definition.__dict__)
-        output = transform_definition_table_output(build_definition)
-        click.echo(json.dumps(output, indent=2))
-    except vsts.exceptions.VstsServiceError:
-        raise click.BadParameter('a build definition does not exist with id: ' + str(definition_id), ctx=ctx,
-                                 param=definition_id, param_hint='--definition-id')
+        if not project:
+            project = ctx.obj._azure_devops_project
+        for definition_id in definition_ids:
+            build_definition = _build_client.get_definition(definition_id, project)
+            # pprint(build_definition.__dict__)
+            output = transform_definition_table_output(build_definition)
+            click.echo(json.dumps(output, indent=2))
+    except vsts.exceptions.VstsServiceError as err:
+        raise click.BadArgumentUsage(err, ctx=ctx)
 
 
 # @get.command('build-definitions')
