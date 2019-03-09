@@ -6,10 +6,11 @@ Azure DevOps Manager
 import os
 import json
 import click
+from azdevman.utils._const import AZDEVMAN_ENV_PREFIX
 from azdevman.utils import context
 
 __version__ = "0.0.1"
-CONTEXT_SETTINGS = dict(auto_envvar_prefix='AZDEVMAN_',
+CONTEXT_SETTINGS = dict(auto_envvar_prefix=AZDEVMAN_ENV_PREFIX,
                         help_option_names=['-h', '--help'],
                         terminal_width=125)
 command_plugins = os.path.join(os.path.dirname(__file__), 'commands')
@@ -48,3 +49,4 @@ def cli(ctx):
 
     Azdevman is a CLI tool that assists in managing resources within an Azure DevOps organization."""
     ctx.obj = context.Context()
+    ctx.obj._init_config()
