@@ -2,8 +2,6 @@ import json
 from pprint import pprint
 import click
 import azure.devops.exceptions
-from msrest.authentication import BasicAuthentication
-from azdevman.utils.context import pass_context
 
 
 @click.group('get')
