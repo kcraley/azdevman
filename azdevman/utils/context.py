@@ -2,6 +2,7 @@ import base64
 import json
 import os
 import click
+from azdevman.utils.models import Models
 from azdevman.utils._const import (
     AZ_BASE_URL,
     AZ_DEFAULT_ORG,
@@ -35,6 +36,7 @@ class Context(object):
         self._set_current_context()
         self.config = self._get_config()
         self.connection = self._create_connection()
+        self.models = Models()
 
     def _init_config(self):
         if not os.path.exists(os.path.dirname(self._config_path)):
