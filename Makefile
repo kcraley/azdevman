@@ -31,3 +31,7 @@ $(VENV_NAME)/bin/activate: setup.py
 
 run: venv
 	azdevman
+
+.PHONY:	freeze
+freeze:
+	pip freeze | grep -v "pkg-resources" > requirements.txt
