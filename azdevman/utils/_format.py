@@ -2,6 +2,21 @@ from collections import OrderedDict
 import datetime
 
 
+def transform_project_output(result):
+    table_output = []
+    for item in result:
+        table_output.append(_transform_project_row(item))
+    return table_output
+
+
+def _transform_project_row(row):
+    table_row = OrderedDict()
+    table_row['ID'] = row.id
+    table_row['Name'] = row.name
+    table_row['Description'] = row.description
+    return table_row
+
+
 def transform_builds_table_output(result):
     table_output = []
     for item in result:
