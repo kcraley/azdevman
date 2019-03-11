@@ -21,6 +21,7 @@ def create_repo(ctx, project, repository_names):
         for repo_name in repository_names:
             _git_create_options = ctx.models.git_models.GitRepositoryCreateOptions(repo_name)
             _git_client.create_repository(_git_create_options, project)
+            click.echo('Created repository ' + repo_name + ' within project ' + project)
     except Exception as err:
         raise click.UsageError(err)
 

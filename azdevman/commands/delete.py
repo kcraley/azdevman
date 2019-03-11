@@ -23,5 +23,6 @@ def create_repo(ctx, project, repository_names):
         for repo_name in repository_names:
             repository = _git_client.get_repository(repo_name, project)
             _git_client.delete_repository(repository.id, repository.project.name)
+            click.echo('Deleted repository ' + repo_name + ' within project ' + project)
     except Exception as err:
         raise click.UsageError(err)
