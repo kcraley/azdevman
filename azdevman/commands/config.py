@@ -56,10 +56,13 @@ def set_context(ctx, context):
     try:
         with open(ctx.obj._config_path, 'r') as file:
             _config_contents = json.load(file)
-        _config_contents["CurrentContext"] = context
+        if context in _config_contents["Profiles"]:
+            _config_contents["CurrentContext"] = context
+            click.echo('Set the current context to: ' + context)
+        else:
+            click.echo('The context does not exist in the configuration: ' + context)
         with open(ctx.obj._config_path, 'w') as file:
             json.dump(_config_contents, file, sort_keys=True, indent=2)
-            click.echo('Set the current context to: ' + context)
     except KeyError as err:
         raise click.BadArgumentUsage('The context does not exist' + err, ctx=ctx)
 
@@ -73,6 +76,9 @@ def delete_context(ctx, context):
         with open(ctx._config_path, 'r') as file:
             _config_contents = json.load(file)
         for profile in context:
+            if _config_contents["CurrentContext"] == profile:
+                _config_contents["CurrentContext"] = "default"
+                click.echo('Setting current context to default')
             _config_contents["Profiles"].pop(profile, None)
         with open(ctx._config_path, 'w') as file:
             json.dump(_config_contents, file, sort_keys=True, indent=2)
