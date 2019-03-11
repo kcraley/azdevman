@@ -80,8 +80,8 @@ def delete_context(ctx, context):
                 _config_contents["CurrentContext"] = "default"
                 click.echo('Setting current context to default')
             _config_contents["Profiles"].pop(profile, None)
+            click.echo('Deleted context: ' + profile)
         with open(ctx._config_path, 'w') as file:
             json.dump(_config_contents, file, sort_keys=True, indent=2)
-            click.echo('Deleted context: ' + profile)
     except KeyError as err:
         raise click.UsageError("The profile " + err + " does not exist.")
