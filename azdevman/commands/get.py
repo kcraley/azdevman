@@ -11,15 +11,25 @@ def get(ctx):
 
 
 @get.command('projects')
+@click.option('-f', '--format', 'format', required=True, default="json",
+              help='Format of the output [json/table]')
 @click.pass_obj
-def get_projects(ctx):
+def get_projects(ctx, format):
     """Get all projects within an Azure DevOps organization"""
-    _core_client = ctx.connection.clients.get_core_client()
-    projects = _core_client.get_projects()
-    print('{:<38} {:<38} {:<60}'.format('Project ID:', 'Project Name:', 'Description'))
-    print('-' * 150)
-    for project in projects:
-        print("{!s:<38} {!s:<38} {!s:<.120}".format(project.id, project.name, project.description))
+    try:
+        from azdevman.utils._format import transform_project_output
+        _core_client = ctx.connection.clients.get_core_client()
+        projects = _core_client.get_projects()
+        if format == "json":
+            output = transform_project_output(projects)
+            click.echo(json.dumps(output, indent=2, sort_keys=True))
+        elif format == "table":
+            print('{:<38} {:<38} {:<60}'.format('Project ID:', 'Project Name:', 'Description'))
+            print('-' * 150)
+            for project in projects:
+                print("{!s:<38} {!s:<38} {!s:<.120}".format(project.id, project.name, project.description))
+    except Exception as err:
+        raise click.UsageError(err)
 
 
 @get.command('build')
