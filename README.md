@@ -5,7 +5,7 @@ Azdevman is a CLI tool that assists in managing resources within an Azure DevOps
 ## Install
 
 ```bash
-virtualenv -p python3 venv && pip install -e . && source ./venv/bin/activate
+virtualenv -p python3 venv && source ./venv/bin/activate && pip install -e .
 ```
 
 ## Configure
@@ -59,4 +59,4 @@ Commands:
 
 ## License
 
-[MIT](LICENSE) © Keith Craley
+[MIT](LICENSE) © Keith Craley 2019
