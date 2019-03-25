@@ -1,7 +1,8 @@
 import click
 from azdevman.utils._const import (
     AZ_DEFAULT_BUILD_DEF_PROCESS,
-    AZ_DEFAULT_BUILD_DEF_QUEUE
+    AZ_DEFAULT_BUILD_DEF_QUEUE,
+    AZ_DEFAULT_BRANCH
 )
 
 
@@ -50,12 +51,15 @@ def create_build_definition(ctx, definition_name, repo_name, copy_from, project)
             # Get repository information to build BuildRepository model
             _repo = _git_client.get_repository(repo_name, project)
             _build_repo_model = ctx.models.build_models.BuildRepository(
-                default_branch=_repo.default_branch,
                 id=_repo.id,
                 name=_repo.name,
                 url=_repo.remote_url,
                 type='TfsGit'
             )
+            if _repo.default_branch is None:
+                _build_repo_model.default_branch = AZ_DEFAULT_BRANCH
+            else:
+                _build_repo_model.default_branch = _repo.default_branch
 
             # Set default values
             _build_process = AZ_DEFAULT_BUILD_DEF_PROCESS
