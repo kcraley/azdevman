@@ -133,3 +133,21 @@ def get_release(ctx, project, release_ids):
 def get_release_def(ctx, project, definition_id):
     """Get a single release definition or a list of release definitions within a project"""
     pass
+
+
+@get.command('commits')
+@click.option('-p', '--project', 'project',
+              help='Project name or id to scope the search')
+@click.option('-u', '--user', 'user',
+              help='Project name or id to scope the search')
+@click.pass_context
+def get_commits_def(ctx, project, user):
+    """Get commits based on users across projects"""
+    _git_client = ctx.obj.connection.client.get_git_client()
+    try:
+        if not project:
+            project = ctx.obj._azure_devops_project
+        _query_model = ctx.models.git_models.GitQueryCommitsCriteria()
+        _git_client.get_commits()
+    except expression as identifier:
+        pass
