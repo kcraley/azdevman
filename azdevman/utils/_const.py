@@ -56,3 +56,4 @@ AZ_DEFAULT_BUILD_DEF_QUEUE = {
         "name": "Hosted VS2017"
     }
 }
+AZ_DEFAULT_BRANCH = "refs/heads/master"
